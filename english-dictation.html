@@ -208,6 +208,7 @@
             </div>
             
             <button class="speak-btn" onclick="speakWord()">🔊 朗读单词</button>
+            <p style="color:#AAAAAA;font-size:6px;margin-top:5px;">（如果没声音可能是设备不支持英文语音）</p>
             
             <div class="input-area">
                 <input type="text" id="answerInput" placeholder="输入英语单词" onkeyup="handleEnter(event)">
@@ -241,59 +242,81 @@
 
     <script>
         const words = [
-            { word: "hobby", meaning: "爱好", unit: "Unit 1" },
-            { word: "kind", meaning: "种类", unit: "Unit 1" },
-            { word: "folk", meaning: "民间的", unit: "Unit 1" },
-            { word: "club", meaning: "俱乐部", unit: "Unit 1" },
-            { word: "join", meaning: "加入", unit: "Unit 1" },
-            { word: "because", meaning: "因为", unit: "Unit 1" },
-            { word: "science", meaning: "科学", unit: "Unit 1" },
-            { word: "chess", meaning: "国际象棋", unit: "Unit 1" },
-            { word: "well", meaning: "好", unit: "Unit 1" },
-            { word: "why", meaning: "为什么", unit: "Unit 1" },
-            { word: "fan", meaning: "粉丝", unit: "Unit 1" },
-            { word: "travel", meaning: "旅行", unit: "Unit 1" },
-            { word: "study", meaning: "学习", unit: "Unit 1" },
-            { word: "face", meaning: "脸", unit: "Unit 1" },
-            { word: "feeling", meaning: "感觉", unit: "Unit 1" },
-            { word: "throw", meaning: "扔", unit: "Unit 2" },
-            { word: "thing", meaning: "东西", unit: "Unit 2" },
-            { word: "out", meaning: "外面", unit: "Unit 2" },
-            { word: "safe", meaning: "安全的", unit: "Unit 2" },
-            { word: "down", meaning: "向下", unit: "Unit 2" },
-            { word: "skate", meaning: "滑冰", unit: "Unit 2" },
-            { word: "fall", meaning: "落下", unit: "Unit 2" },
-            { word: "March", meaning: "三月", unit: "Unit 2" },
-            { word: "thin", meaning: "瘦的", unit: "Unit 2" },
-            { word: "dangerous", meaning: "危险的", unit: "Unit 2" },
-            { word: "board", meaning: "木板", unit: "Unit 2" },
-            { word: "lake", meaning: "湖", unit: "Unit 2" },
-            { word: "careful", meaning: "小心的", unit: "Unit 2" },
-            { word: "push", meaning: "推", unit: "Unit 2" },
-            { word: "crowd", meaning: "人群", unit: "Unit 2" },
-            { word: "slowly", meaning: "慢地", unit: "Unit 2" },
-            { word: "fast", meaning: "快", unit: "Unit 2" },
-            { word: "street", meaning: "街道", unit: "Unit 2" },
-            { word: "light", meaning: "灯", unit: "Unit 2" },
-            { word: "again", meaning: "再一次", unit: "Unit 2" },
-            { word: "fun", meaning: "有趣", unit: "Unit 3" },
-            { word: "game", meaning: "游戏", unit: "Unit 3" },
-            { word: "be good at", meaning: "擅长", unit: "Unit 3" },
-            { word: "seventy", meaning: "七十", unit: "Unit 3" },
-            { word: "eighty", meaning: "八十", unit: "Unit 3" },
-            { word: "ninety", meaning: "九十", unit: "Unit 3" },
-            { word: "tired", meaning: "累的", unit: "Unit 3" },
-            { word: "win", meaning: "赢", unit: "Unit 3" },
-            { word: "hundred", meaning: "百", unit: "Unit 3" },
-            { word: "kung fu", meaning: "功夫", unit: "Unit 3" },
-            { word: "leg", meaning: "腿", unit: "Unit 3" },
-            { word: "hurt", meaning: "受伤", unit: "Unit 3" },
-            { word: "badly", meaning: "严重地", unit: "Unit 3" },
-            { word: "king", meaning: "国王", unit: "Unit 3" },
-            { word: "visit", meaning: "参观", unit: "Unit 3" },
-            { word: "the Great Wall", meaning: "长城", unit: "Unit 3" },
-            { word: "hero", meaning: "英雄", unit: "Unit 3" },
-            { word: "him", meaning: "他", unit: "Unit 3" }
+            // 假期与国家
+            { word: "Labour Day", meaning: "劳动节", unit: "Unit 1" },
+            { word: "holiday", meaning: "假期", unit: "Unit 1" },
+            { word: "May", meaning: "五月", unit: "Unit 1" },
+            { word: "chore", meaning: "家务", unit: "Unit 1" },
+            { word: "the USA", meaning: "美国", unit: "Unit 1" },
+            { word: "September", meaning: "九月", unit: "Unit 1" },
+            { word: "June", meaning: "六月", unit: "Unit 1" },
+            { word: "Canada", meaning: "加拿大", unit: "Unit 1" },
+            { word: "often", meaning: "经常", unit: "Unit 1" },
+            { word: "cinema", meaning: "电影院", unit: "Unit 1" },
+            { word: "National Day", meaning: "国庆节", unit: "Unit 1" },
+            { word: "October", meaning: "十月", unit: "Unit 1" },
+            { word: "flag", meaning: "旗帜", unit: "Unit 1" },
+            { word: "watch", meaning: "观看", unit: "Unit 1" },
+            { word: "early", meaning: "早的", unit: "Unit 1" },
+            { word: "special", meaning: "特殊的", unit: "Unit 1" },
+            { word: "Water-Splashing Festival", meaning: "泼水节", unit: "Unit 1" },
+            { word: "April", meaning: "四月", unit: "Unit 1" },
+            { word: "Inner Mongolia", meaning: "内蒙古", unit: "Unit 1" },
+            { word: "Naadam", meaning: "那达慕", unit: "Unit 1" },
+            { word: "July", meaning: "七月", unit: "Unit 1" },
+            { word: "August", meaning: "八月", unit: "Unit 1" },
+            // 家庭与人物
+            { word: "grandma", meaning: "奶奶/外婆", unit: "Unit 2" },
+            { word: "dear", meaning: "亲爱的", unit: "Unit 2" },
+            { word: "TV", meaning: "电视", unit: "Unit 2" },
+            { word: "television", meaning: "电视机", unit: "Unit 2" },
+            { word: "grandpa", meaning: "爷爷/外公", unit: "Unit 2" },
+            { word: "plant", meaning: "植物", unit: "Unit 2" },
+            { word: "kitchen", meaning: "厨房", unit: "Unit 2" },
+            { word: "weekend", meaning: "周末", unit: "Unit 2" },
+            { word: "people", meaning: "人们", unit: "Unit 2" },
+            { word: "they", meaning: "他们", unit: "Unit 2" },
+            { word: "sky", meaning: "天空", unit: "Unit 2" },
+            { word: "fly", meaning: "飞", unit: "Unit 2" },
+            { word: "put", meaning: "放", unit: "Unit 2" },
+            { word: "role", meaning: "角色", unit: "Unit 2" },
+            { word: "paint", meaning: "画", unit: "Unit 2" },
+            { word: "funny", meaning: "有趣的", unit: "Unit 2" },
+            { word: "brave", meaning: "勇敢的", unit: "Unit 2" },
+            { word: "enjoy", meaning: "喜欢", unit: "Unit 2" },
+            { word: "world", meaning: "世界", unit: "Unit 2" },
+            { word: "woman", meaning: "女人", unit: "Unit 2" },
+            { word: "tea", meaning: "茶", unit: "Unit 2" },
+            { word: "rabbit", meaning: "兔子", unit: "Unit 2" },
+            // 生活与社区
+            { word: "glad", meaning: "高兴的", unit: "Unit 3" },
+            { word: "need", meaning: "需要", unit: "Unit 3" },
+            { word: "buy", meaning: "买", unit: "Unit 3" },
+            { word: "tell", meaning: "告诉", unit: "Unit 3" },
+            { word: "way", meaning: "方式", unit: "Unit 3" },
+            { word: "shop", meaning: "商店", unit: "Unit 3" },
+            { word: "near", meaning: "附近", unit: "Unit 3" },
+            { word: "front", meaning: "前面", unit: "Unit 3" },
+            { word: "in front of", meaning: "在...前面", unit: "Unit 3" },
+            { word: "building", meaning: "建筑物", unit: "Unit 3" },
+            { word: "far", meaning: "远", unit: "Unit 3" },
+            { word: "robot", meaning: "机器人", unit: "Unit 3" },
+            { word: "know", meaning: "知道", unit: "Unit 3" },
+            { word: "third", meaning: "第三", unit: "Unit 3" },
+            { word: "shelf", meaning: "架子", unit: "Unit 3" },
+            { word: "letter", meaning: "信", unit: "Unit 3" },
+            { word: "second", meaning: "第二", unit: "Unit 3" },
+            { word: "beside", meaning: "旁边", unit: "Unit 3" },
+            { word: "playground", meaning: "操场", unit: "Unit 3" },
+            { word: "centre", meaning: "中心", unit: "Unit 3" },
+            { word: "smart", meaning: "聪明的", unit: "Unit 3" },
+            { word: "community", meaning: "社区", unit: "Unit 3" },
+            { word: "themselves", meaning: "他们自己", unit: "Unit 3" },
+            { word: "dark", meaning: "黑暗的", unit: "Unit 3" },
+            { word: "toilet", meaning: "厕所", unit: "Unit 3" },
+            { word: "between", meaning: "之间", unit: "Unit 3" },
+            { word: "supermarket", meaning: "超市", unit: "Unit 3" },
+            { word: "quickly", meaning: "快速地", unit: "Unit 3" }
         ];
         
         let currentIndex = 0, correctCount = 0, wrongCount = 0, shuffledWords = [];
@@ -309,9 +332,13 @@
         function speakWord() {
             const word = shuffledWords[currentIndex].word;
             if ('speechSynthesis' in window) {
+                // 先停止之前的朗读
+                speechSynthesis.cancel();
+                
                 const utterance = new SpeechSynthesisUtterance(word);
                 utterance.lang = 'en-US';
                 utterance.rate = 0.8;
+                
                 speechSynthesis.speak(utterance);
             }
         }
