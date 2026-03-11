@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>测试</title>
+</head>
+<body style="background:#1a1a2e;color:white;font-family:sans-serif;padding:20px">
+    <h1>测试页面</h1>
+    <p id="test">如果能看到这行字，说明HTML正常</p>
+    <button onclick="alert('JavaScript工作正常!')" style="padding:10px 20px;margin:10px">点击测试</button>
+    <div id="result" style="margin:20px 0;padding:10px;background:#333;border-radius:5px"></div>
+    <canvas id="c" width="300" height="300" style="background:#000;border:2px solid #fff"></canvas>
+</body>
+<script>
+document.getElementById('test').innerHTML = '✅ JavaScript执行成功！';
+var cvs = document.getElementById('c');
+var ctx = cvs.getContext('2d');
+ctx.fillStyle = 'red';
+ctx.fillRect(50, 50, 100, 100);
+ctx.fillStyle = 'yellow';
+ctx.fillRect(100, 100, 50, 50);
+document.getElementById('result').innerHTML = 'Canvas绘制测试: 上面应该有一个红色正方形和一个黄色小正方形';
+</script>
+</html>
