@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>索玛立方体 - 观察物体</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #FFD700;
+            text-align: center;
+        }
+        
+        .subtitle {
+            font-size: 14px;
+            color: rgba(255,255,255,0.7);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 12px 20px;
+            margin: 5px 0;
+            border-radius: 25px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+        
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .btn.active {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .info-box {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .info-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #4ECDC4;
+            margin-bottom: 10px;
+        }
+        
+        .info-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .canvas-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+            position: relative;
+        }
+        
+        .cube-wrapper {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+        
+        .cube {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            transform-style: preserve-3d;
+            transform: rotateX(-20deg) rotateY(-45deg);
+            transition: transform 0.1s;
+        }
+        
+        .cubelet {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 12px;
+        }
+        
+        .face {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 5px;
+        }
+        
+        .face-front { transform: translateZ(25px); }
+        .face-back { transform: rotateY(180deg) translateZ(25px); }
+        .face-right { transform: rotateY(90deg) translateZ(25px); }
+        .face-left { transform: rotateY(-90deg) translateZ(25px); }
+        .face-top { transform: rotateX(90deg) translateZ(25px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(25px); }
+        
+        /* 不同块的颜色 */
+        .piece-1 .face { background: #FF6B6B; }
+        .piece-2 .face { background: #4ECDC4; }
+        .piece-3 .face { background: #45B7D1; }
+        .piece-4 .face { background: #96CEB4; }
+        .piece-5 .face { background: #FFEAA7; }
+        .piece-6 .face { background: #DDA0DD; }
+        .piece-7 .face { background: #98D8C8; }
+        
+        .cube-piece {
+            position: absolute;
+            transform-style: preserve-3d;
+        }
+        
+        .controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.4);
+            transform: scale(1.1);
+        }
+        
+        .view-info {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+        
+        .view-label {
+            color: #FFD700;
+            font-weight: bold;
+        }
+        
+        .front-view, .side-view, .top-view {
+            position: absolute;
+            border: 3px solid #FFD700;
+            background: rgba(0,0,0,0.5);
+            padding: 10px;
+            font-size: 12px;
+            color: #FFD700;
+        }
+        
+        .front-view {
+            left: 320px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .side-view {
+            left: 320px;
+            top: 20px;
+            width: 80px;
+            height: 60px;
+        }
+        
+        .top-view {
+            left: 320px;
+            bottom: 100px;
+            width: 80px;
+            height: 60px;
+        }
+        
+        .grid-view {
+            display: grid;
+            grid-template-columns: repeat(3, 20px);
+            gap: 2px;
+        }
+        
+        .grid-cell {
+            width: 20px;
+            height: 20px;
+            background: #4ECDC4;
+            border-radius: 2px;
+        }
+        
+        .grid-cell.empty {
+            background: transparent;
+        }
+        
+        .hidden-pieces {
+            margin-top: 20px;
+        }
+        
+        .piece-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .piece-item {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .piece-item:hover {
+            transform: scale(1.1);
+        }
+        
+        .piece-item.show {
+            box-shadow: 0 0 15px currentColor;
+        }
+        
+        /* 动画 */
+        @keyframes rotate {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+        
+        .auto-rotate {
+            animation: rotate 10s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="title">🔮 索玛立方体</div>
+            <div class="subtitle">四年级数学 - 观察物体</div>
+            
+            <button class="btn active" onclick="setMode('single')">📦 单个立方体</button>
+            <button class="btn" onclick="setMode('pieces')">🧩 7个块</button>
+            <button class="btn" onclick="setMode('solved')">✅ 完整立方体</button>
+            
+            <div class="info-box">
+                <div class="info-title">💡 什么是索玛立方体？</div>
+                <div class="info-text">
+                    索玛立方体由7个不同形状的"多立方体"组成，可以拼成一个大立方体！
+                    <br><br>
+                    <b>观察物体三视图：</b><br>
+                    • 从正面看 → 正视图<br>
+                    • 从侧面看 → 侧视图<br>
+                    • 从上面看 → 俯视图
+                </div>
+            </div>
+            
+            <div class="info-box">
+                <div class="info-title">🎮 操作说明</div>
+                <div class="info-text">
+                    • 拖动鼠标旋转视角<br>
+                    • 点击按钮切换视图<br>
+                    • 观察不同方向看到的样子
+                </div>
+            </div>
+            
+            <div class="hidden-pieces">
+                <div class="info-title">🔢 7个块 (点击显示)</div>
+                <div class="piece-list">
+                    <div class="piece-item" style="background:#FF6B6B" onclick="togglePiece(1)">1</div>
+                    <div class="piece-item" style="background:#4ECDC4" onclick="togglePiece(2)">2</div>
+                    <div class="piece-item" style="background:#45B7D1" onclick="togglePiece(3)">3</div>
+                    <div class="piece-item" style="background:#96CEB4" onclick="togglePiece(4)">4</div>
+                    <div class="piece-item" style="background:#FFEAA7" onclick="togglePiece(5)">5</div>
+                    <div class="piece-item" style="background:#DDA0DD" onclick="togglePiece(6)">6</div>
+                    <div class="piece-item" style="background:#98D8C8" onclick="togglePiece(7)">7</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="canvas-container">
+            <div class="cube-wrapper" id="cubeWrapper">
+                <div class="cube" id="cube">
+                    <!-- 立方体方块将由JS生成 -->
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn" onclick="rotateView('x+')">⬆️</button>
+                <button class="control-btn" onclick="rotateView('x-')">⬇️</button>
+                <button class="control-btn" onclick="rotateView('y+')">➡️</button>
+                <button class="control-btn" onclick="rotateView('y-')">⬅️</button>
+                <button class="control-btn" onclick="resetView()">🏠</button>
+                <button class="control-btn" onclick="autoRotate()">🔄</button>
+            </div>
+            
+            <div class="view-info">
+                <div class="view-label">当前视角</div>
+                <div id="viewName">任意视角</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentMode = 'single';
+        let rotationX = -20;
+        let rotationY = -45;
+        let isDragging = false;
+        let lastX, lastY;
+        let autoRotating = false;
+        
+        // 7个索玛立方体的形状定义 (用1表示有方块，0表示空)
+        const pieces = [
+            // Piece 1: L-shaped (3 blocks)
+            [[1,1],[1,0]],
+            // Piece 2: T-shaped (4 blocks)  
+            [[1,1,1],[0,1,0]],
+            // Piece 3: Z-shaped (4 blocks)
+            [[1,1,0],[0,1,1]],
+            // Piece 4: L with twist (4 blocks)
+            [[1,1],[1,1]],
+            // Piece 5: Tripod (4 blocks)
+            [[1,1],[1,0],[1,0]],
+            // Piece 6: S-shaped (4 blocks)
+            [[1,0],[1,1],[0,1]],
+            // Piece 7: Corner (3 blocks)
+            [[1,1],[1,0]]
+        ];
+        
+        // 颜色
+        const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8'];
+        
+        function createCube(mode) {
+            const cube = document.getElementById('cube');
+            cube.innerHTML = '';
+            
+            if (mode === 'single') {
+                // 单个立方体
+                for (let x = 0; x < 3; x++) {
+                    for (let y = 0; y < 3; y++) {
+                        for (let z = 0; z < 3; z++) {
+                            createCubelet(cube, x, y, z, '#4ECDC4');
+                        }
+                    }
+                }
+            } else if (mode === 'pieces') {
+                // 7个分散的块
+                const offsets = [
+                    {x: -3, y: 0, z: 0},
+                    {x: 0, y: 0, z: 0},
+                    {x: 3, y: 0, z: 0},
+                    {x: -3, y: 0, z: 3},
+                    {x: 0, y: 0, z: 3},
+                    {x: 3, y: 0, z: 3},
+                    {x: 0, y: 0, z: -3}
+                ];
+                
+                pieces.forEach((shape, i) => {
+                    createPiece(cube, shape, offsets[i], colors[i], i + 1);
+                });
+            } else if (mode === 'solved') {
+                // 完整拼好的立方体
+                const solvedPattern = [
+                    [[1,1,1],[1,1,1],[1,1,1]]
+                ];
+                
+                // 简化的完整立方体
+                for (let x = 0; x < 3; x++) {
+                    for (let y = 0; y < 3; y++) {
+                        for (let z = 0; z < 3; z++) {
+                            const colorIndex = (x + y + z) % 7;
+                            createCubelet(cube, x - 1, y - 1, z - 1, colors[colorIndex]);
+                        }
+                    }
+                }
+            }
+        }
+        
+        function createCubelet(parent, x, y, z, color) {
+            const cubelet = document.createElement('div');
+            cubelet.className = 'cubelet';
+            cubelet.style.transform = `translate3d(${x * 50}px, ${-y * 50}px, ${z * 50}px)`;
+            
+            const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
+            faces.forEach(face => {
+                const div = document.createElement('div');
+                div.className = `face face-${face}`;
+                div.style.background = color;
+                div.style.opacity = '0.8';
+                cubelet.appendChild(div);
+            });
+            
+            parent.appendChild(cubelet);
+        }
+        
+        function createPiece(parent, shape, offset, color, pieceNum) {
+            shape.forEach((row, y) => {
+                row.forEach((cell, x) => {
+                    if (cell === 1) {
+                        createCubelet(parent, offset.x + x, offset.y, offset.z + y, color);
+                    }
+                });
+            });
+        }
+        
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            createCube(mode);
+        }
+        
+        function rotateView(direction) {
+            const cube = document.getElementById('cube');
+            const step = 15;
+            
+            switch(direction) {
+                case 'x+': rotationX += step; break;
+                case 'x-': rotationX -= step; break;
+                case 'y+': rotationY += step; break;
+                case 'y-': rotationY -= step; break;
+            }
+            
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            updateViewName(direction);
+        }
+        
+        function resetView() {
+            rotationX = -20;
+            rotationY = -45;
+            const cube = document.getElementById('cube');
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            document.getElementById('viewName').textContent = '重置视角';
+            autoRotating = false;
+            cube.classList.remove('auto-rotate');
+        }
+        
+        function autoRotate() {
+            const cube = document.getElementById('cube');
+            autoRotating = !autoRotating;
+            
+            if (autoRotating) {
+                cube.classList.add('auto-rotate');
+                document.getElementById('viewName').textContent = '自动旋转中...';
+            } else {
+                cube.classList.remove('auto-rotate');
+                document.getElementById('viewName').textContent = '已停止';
+            }
+        }
+        
+        function updateViewName(direction) {
+            const names = {
+                'x+': '仰视',
+                'x-': '俯视',
+                'y+': '右侧',
+                'y-': '左侧'
+            };
+            document.getElementById('viewName').textContent = names[direction] || '自定义视角';
+        }
+        
+        // 鼠标拖动旋转
+        const wrapper = document.getElementById('cubeWrapper');
+        
+        wrapper.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+        
+        wrapper.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            
+            const deltaX = e.clientX - lastX;
+            const deltaY = e.clientY - lastY;
+            
+            rotationY += deltaX * 0.5;
+            rotationX -= deltaY * 0.5;
+            
+            const cube = document.getElementById('cube');
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            
+            lastX = e.clientX;
+            lastY = e.clientY;
+        });
+        
+        wrapper.addEventListener('mouseup', () => isDragging = false);
+        wrapper.addEventListener('mouseleave', () => isDragging = false);
+        
+        // 触摸支持
+        wrapper.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+        });
+        
+        wrapper.addEventListener('touchmove', (e) => {
+            if (!isDragging) return;
+            e.preventDefault();
+            
+            const deltaX = e.touches[0].clientX - lastX;
+            const deltaY = e.touches[0].clientY - lastY;
+            
+            rotationY += deltaX * 0.5;
+            rotationX -= deltaY * 0.5;
+            
+            const cube = document.getElementById('cube');
+            cube.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+            
+            lastX = e.touches[0].clientX;
+            lastY = e.touches[0].clientY;
+        });
+        
+        wrapper.addEventListener('touchend', () => isDragging = false);
+        
+        // 初始化
+        createCube('single');
+    </script>
+</body>
+</html>
