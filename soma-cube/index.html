@@ -231,7 +231,7 @@ function show(n){
             var dz = p[2] - 1;
             var dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
             if(dist < 0.1) dist = 0.1; // 防止除以0
-            var explode = 0.8; // 爆炸距离
+            var explode = 1.2; // 爆炸距离
             cubes.push({
                 x:p[0] + dx/dist*explode,
                 y:p[1] + dy/dist*explode,
