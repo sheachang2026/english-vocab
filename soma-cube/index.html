@@ -311,6 +311,8 @@
             [0,-1,2,'c6'], [1,-1,2,'c6'], [2,-1,2,'c7']
         ];
         
+        console.log('fullCube length:', fullCube.length);
+        
         // 颜色映射
         const colorMap = {
             'c1': '#FF6B6B', 'c2': '#4ECDC4', 'c3': '#45B7D1',
@@ -318,6 +320,7 @@
         };
         
         function createCube(x, y, z, colorClass) {
+            // console.log('Creating cube at', x, y, z, colorClass);
             const cube = document.createElement('div');
             cube.className = 'cube-unit';
             // 居中偏移：x*40 - 40, y*40 - 40, z*40 - 40
