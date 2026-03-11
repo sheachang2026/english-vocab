@@ -59,12 +59,15 @@
         .pieces-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 8px;
+            gap: 6px;
+            justify-items: center;
             flex: 1;
+            align-content: center;
         }
         
         .piece-thumb {
-            aspect-ratio: 1;
+            width: 50px;
+            height: 50px;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s;
