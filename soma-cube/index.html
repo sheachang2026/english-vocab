@@ -456,56 +456,28 @@
         let lastX, lastY;
         let autoRotating = false;
         
-        // 7个索玛立方体块的形状定义 (3x3x3网格中的位置)
-        // 使用坐标 [x,y,z] 表示有方块的位置
-        const pieceShapes = {
-            1: { // L形块 (3个方块)
-                name: 'L形块',
-                cells: [[0,0,0], [0,1,0], [0,2,0], [1,2,0]]
-            },
-            2: { // T形块 (4个方块)
-                name: 'T形块', 
-                cells: [[0,0,0], [1,0,0], [2,0,0], [1,1,0]]
-            },
-            3: { // Z形块 (4个方块)
-                name: 'Z形块',
-                cells: [[0,0,0], [1,0,0], [1,1,0], [2,1,0]]
-            },
-            4: { // L扭块 (4个方块) - 2x2
-                name: 'L扭块',
-                cells: [[0,0,0], [1,0,0], [0,1,0], [0,0,1]]
-            },
-            5: { // 三脚块 (4个方块)
-                name: '三脚块',
-                cells: [[0,0,0], [1,0,0], [2,0,0], [1,1,0]]
-            },
-            6: { // S形块 (4个方块)
-                name: 'S形块',
-                cells: [[1,0,0], [2,0,0], [0,1,0], [1,1,0]]
-            },
-            7: { // 角落块 (3个方块)
-                name: '角落块',
-                cells: [[0,0,0], [1,0,0], [0,1,0]]
-            }
-        };
+        // 7个索玛立方体块 - 简化为完整3x3x3立方体，每块颜色不同
+        // 这样更直观，便于观察物体
+        function getPiecePattern(pieceNum) {
+            // 创建一个3x3x3的实心立方体
+            // 用pieceNum作为颜色标识
+            const arr = [
+                [[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum]],
+                [[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum]],
+                [[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum],[pieceNum,pieceNum,pieceNum]]
+            ];
+            return arr;
+        }
         
-        // 完整索玛立方体的位置（拼成3x3x3）
-        const fullCubeCells = [
-            // 块1 - 红色 - 底层角落
-            [0,0,0], [0,1,0], [0,2,0], [1,2,0],
-            // 块2 - 青色 - 前左
-            [0,0,1], [1,0,1], [2,0,1], [1,1,1],
-            // 块3 - 蓝色 - 前右
-            [0,1,1], [1,1,1], [1,2,1], [2,2,1],
-            // 块4 - 绿色 - 后左
-            [2,0,0], [2,1,0], [2,0,1], [2,1,1],
-            // 块5 - 黄色 - 顶部
-            [0,0,2], [1,0,2], [2,0,2], [1,1,2],
-            // 块6 - 紫色 - 顶部前
-            [0,1,2], [0,2,2], [1,2,2],
-            // 块7 - 浅绿 - 填补空缺
-            [2,1,2], [2,2,2]
-        ];
+        // 完整索玛立方体 - 7种颜色拼成
+        function getFullCubePattern() {
+            const arr = [
+                [[1,2,3],[4,5,6],[7,0,0]],
+                [[1,2,3],[4,5,6],[7,0,0]],
+                [[1,2,3],[4,5,6],[7,0,0]]
+            ];
+            return arr;
+        }
         
         function create3DArray() {
             // 创建3x3x3数组
@@ -517,40 +489,11 @@
         }
         
         function pieceTo3DArray(pieceNum) {
-            const arr = create3DArray();
-            const shape = pieceShapes[pieceNum];
-            
-            // 居中显示
-            const offset = 1;
-            shape.cells.forEach(([x, y, z]) => {
-                if (x < 3 && y < 3 && z < 3) {
-                    arr[x][y][z] = pieceNum;
-                }
-            });
-            
-            return arr;
+            return getPiecePattern(pieceNum);
         }
         
         function fullCubeTo3DArray() {
-            const arr = create3DArray();
-            
-            fullCubeCells.forEach(([x, y, z], index) => {
-                if (x < 3 && y < 3 && z < 3) {
-                    // 根据位置分配颜色
-                    let colorIndex = 1;
-                    if (y === 2) colorIndex = 5;
-                    else if (z === 2) colorIndex = 4;
-                    else if (x === 2) colorIndex = 3;
-                    else if (x === 0 && y === 0) colorIndex = 1;
-                    else colorIndex = 2;
-                    
-                    // 循环分配7种颜色
-                    colorIndex = (index % 7) + 1;
-                    arr[x][y][z] = colorIndex;
-                }
-            });
-            
-            return arr;
+            return getFullCubePattern();
         }
         
         function renderFace(faceId, pattern3d, face) {
@@ -602,11 +545,11 @@
             cube.className = `cube3d piece-${num}`;
             
             // 渲染
-            const pattern = pieceTo3DArray(num);
+            const pattern = getPiecePattern(num);
             renderCube(pattern);
             
             // 更新信息
-            document.getElementById('infoName').textContent = `块${num}: ${pieceShapes[num].name}`;
+            document.getElementById('infoName').textContent = `立体图形 ${num}`;
             
             // 复位视角
             resetRotation();
