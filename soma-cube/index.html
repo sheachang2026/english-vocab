@@ -111,14 +111,14 @@
 </head>
 <body>
 <div id="left">
-    <div class="t">⛏️ 方块选择</div>
+    <div class="t">⛏️ 1-7号立方体</div>
     <div id="plist"></div>
     <button class="btn" onclick="show('full')">📦 组成正方体</button>
     <button class="btn" onclick="show('explode')">💥 爆炸图</button>
 </div>
 <div id="right">
-    <h1>⛏️ 索玛立方体</h1>
-    <canvas id="cvs" width="500" height="500"></canvas>
+    <h1>🟩 索玛立方体</h1>
+    <canvas id="cvs" width="650" height="500"></canvas>
     <div style="margin-top:20px">
         <button class="ctrl" onclick="rx-=0.1;draw()">▲</button>
         <button class="ctrl" onclick="rx+=0.1;draw()">▼</button>
@@ -130,7 +130,7 @@
 <script>
 var cvs = document.getElementById('cvs');
 var ctx = cvs.getContext('2d');
-var cw = 500, ch = 500;
+var cw = 650, ch = 500;
 var rx = -1.28, ry = -3.97;
 var colors = ['#FF8C00','#FFD700','#32CD32','#9370DB','#00008B','#87CEEB','#FF0000'];
 var shapes = [
