@@ -83,9 +83,9 @@
         }
         
         .piece-thumb {
-            width: 50px;
-            height: 50px;
-            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -93,25 +93,17 @@
             font-weight: bold;
             border: 2px solid transparent;
             flex-shrink: 0;
+            /* 确保是纯色 */
+            background-color: #FF6B6B !important;
         }
         
-        .piece-row:hover .piece-thumb {
-            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-        }
-        
-        .piece-row.active .piece-thumb {
-            border-color: white;
-            box-shadow: 0 0 15px rgba(255,255,255,0.5);
-        }
-        
-        /* 颜色 */
-        .piece-1 { background: linear-gradient(135deg, #FF6B6B 0%, #c0392b 100%); }
-        .piece-2 { background: linear-gradient(135deg, #4ECDC4 0%, #16a085 100%); }
-        .piece-3 { background: linear-gradient(135deg, #45B7D1 0%, #2980b9 100%); }
-        .piece-4 { background: linear-gradient(135deg, #96CEB4 0%, #27ae60 100%); }
-        .piece-5 { background: linear-gradient(135deg, #FFEAA7 0%, #f39c12 100%); }
-        .piece-6 { background: linear-gradient(135deg, #DDA0DD 0%, #8e44ad 100%); }
-        .piece-7 { background: linear-gradient(135deg, #98D8C8 0%, #1abc9c 100%); }
+        .piece-1 { background-color: #FF6B6B !important; }
+        .piece-2 { background-color: #4ECDC4 !important; }
+        .piece-3 { background-color: #45B7D1 !important; }
+        .piece-4 { background-color: #96CEB4 !important; }
+        .piece-5 { background-color: #FFEAA7 !important; }
+        .piece-6 { background-color: #DDA0DD !important; }
+        .piece-7 { background-color: #98D8C8 !important; }
         
         /* 完整立方体缩略图 */
         .full-cube-thumb {
