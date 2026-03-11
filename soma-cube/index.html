@@ -119,12 +119,13 @@
     <h1>⛏️ 索玛立方体</h1>
     <canvas id="cvs" width="500" height="500"></canvas>
     <div style="margin-top:20px">
-        <button class="ctrl" onclick="rx-=0.1;draw()">▲</button>
-        <button class="ctrl" onclick="rx+=0.1;draw()">▼</button>
-        <button class="ctrl" onclick="ry-=0.1;draw()">◀</button>
-        <button class="ctrl" onclick="ry+=0.1;draw()">▶</button>
+        <button class="ctrl" onclick="rx-=0.1;document.getElementById('angleInfo').innerText='角度: rx='+rx.toFixed(2)+', ry='+ry.toFixed(2);draw()">▲</button>
+        <button class="ctrl" onclick="rx+=0.1;document.getElementById('angleInfo').innerText='角度: rx='+rx.toFixed(2)+', ry='+ry.toFixed(2);draw()">▼</button>
+        <button class="ctrl" onclick="ry-=0.1;document.getElementById('angleInfo').innerText='角度: rx='+rx.toFixed(2)+', ry='+ry.toFixed(2);draw()">◀</button>
+        <button class="ctrl" onclick="ry+=0.1;document.getElementById('angleInfo').innerText='角度: rx='+rx.toFixed(2)+', ry='+ry.toFixed(2);draw()">▶</button>
     </div>
     <div class="hint">点击方块查看 | 拖动旋转</div>
+    <div class="hint" id="angleInfo">角度: rx=0, ry=0</div>
 </div>
 <script>
 var cvs = document.getElementById('cvs');
@@ -244,6 +245,7 @@ document.onmousemove = function(e){
     ry += (e.clientX-lx)*0.01;
     rx += (e.clientY-ly)*0.01;
     lx=e.clientX;ly=e.clientY;
+    document.getElementById('angleInfo').innerText = '角度: rx='+rx.toFixed(2)+', ry='+ry.toFixed(2);
     draw();
 };
 document.onmouseup = function(){dragging=false};
