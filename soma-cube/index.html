@@ -318,7 +318,8 @@
         function createCube(x, y, z, colorClass) {
             const cube = document.createElement('div');
             cube.className = 'cube-unit';
-            cube.style.transform = `translate3d(${x*40}px, ${y*40}px, ${z*40}px)`;
+            // 居中偏移：x*40 - 40, y*40 - 40, z*40 - 40
+            cube.style.transform = `translate3d(${x*40 - 40}px, ${y*40 - 40}px, ${z*40 - 40}px)`;
             
             const faces = ['front', 'back', 'right', 'left', 'top', 'bottom'];
             const color = colorMap[colorClass] || '#ccc';
