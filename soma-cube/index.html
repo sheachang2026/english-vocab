@@ -114,6 +114,7 @@
     <div class="t">⛏️ 方块选择</div>
     <div id="plist"></div>
     <button class="btn" onclick="show('full')">📦 组成正方体</button>
+    <button class="btn" onclick="show('explode')">💥 爆炸图</button>
 </div>
 <div id="right">
     <h1>⛏️ 索玛立方体</h1>
@@ -222,6 +223,21 @@ function show(n){
     cubes = [];
     if(n === 'full'){
         fullCubes.forEach(function(p){cubes.push({x:p[0],y:p[1],z:p[2],col:h2r(colors[p[3]])});});
+    }else if(n === 'explode'){
+        // 爆炸图：每个块向外移动
+        fullCubes.forEach(function(p){
+            var dx = p[0] - 1; // 中心偏移
+            var dy = p[1] + 1;
+            var dz = p[2] - 1;
+            var dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+            var explode = 0.8; // 爆炸距离
+            cubes.push({
+                x:p[0] + dx/dist*explode,
+                y:p[1] + dy/dist*explode,
+                z:p[2] + dz/dist*explode,
+                col:h2r(colors[p[3]])
+            });
+        });
     }else{
         shapes[n-1].forEach(function(p){cubes.push({x:p[0],y:p[1],z:p[2],col:h2r(colors[n-1])});});
     }
