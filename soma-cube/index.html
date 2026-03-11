@@ -130,7 +130,7 @@
 var cvs = document.getElementById('cvs');
 var ctx = cvs.getContext('2d');
 var cw = 500, ch = 500;
-var rx = -0.35, ry = 0.3;
+var rx = -0.35, ry = -0.3;
 var colors = ['#FF8C00','#FFD700','#32CD32','#9370DB','#00008B','#87CEEB','#FF0000'];
 var shapes = [
     [[0,0,0],[0,-1,0],[0,-2,0],[1,0,0]],  // 1: L形（左上角 横1竖3）
@@ -224,7 +224,7 @@ function show(n){
     }else{
         shapes[n-1].forEach(function(p){cubes.push({x:p[0],y:p[1],z:p[2],col:h2r(colors[n-1])});});
     }
-    rx = -0.35; ry = 0.3;
+    rx = -0.35; ry = -0.3;
     draw();
 }
 
