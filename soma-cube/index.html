@@ -55,38 +55,58 @@
             text-align: center;
         }
         
-        /* 7个块的缩略图网格 */
+        /* 7个块的缩略图 - 垂直排列 */
         .pieces-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            display: flex;
+            flex-direction: column;
             gap: 6px;
-            justify-items: center;
             flex: 1;
-            align-content: center;
+        }
+        
+        .piece-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .piece-row:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .piece-row.active {
+            background: rgba(255,255,255,0.2);
         }
         
         .piece-thumb {
             width: 50px;
             height: 50px;
             border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             border: 2px solid transparent;
+            flex-shrink: 0;
         }
         
-        .piece-thumb:hover {
-            transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+        .piece-row:hover .piece-thumb {
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            transform: scale(1.05);
         }
         
-        .piece-thumb.active {
+        .piece-row.active .piece-thumb {
             border-color: white;
-            box-shadow: 0 0 20px rgba(255,255,255,0.5);
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+        }
+        
+        .piece-name {
+            font-size: 12px;
+            color: rgba(255,255,255,0.8);
         }
         
         /* 颜色 */
@@ -343,13 +363,34 @@
             <div class="sidebar-top">
                 <div class="section-title">🧩 7个立体图形（点击查看）</div>
                 <div class="pieces-grid">
-                    <div class="piece-thumb piece-1" onclick="showPiece(1)" title="L形块">1</div>
-                    <div class="piece-thumb piece-2" onclick="showPiece(2)" title="T形块">2</div>
-                    <div class="piece-thumb piece-3" onclick="showPiece(3)" title="Z形块">3</div>
-                    <div class="piece-thumb piece-4" onclick="showPiece(4)" title="L扭块">4</div>
-                    <div class="piece-thumb piece-5" onclick="showPiece(5)" title="三脚块">5</div>
-                    <div class="piece-thumb piece-6" onclick="showPiece(6)" title="S形块">6</div>
-                    <div class="piece-thumb piece-7" onclick="showPiece(7)" title="角落块">7</div>
+                    <div class="piece-row" onclick="showPiece(1)">
+                        <div class="piece-thumb piece-1">1</div>
+                        <span class="piece-name">红色 - L形块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(2)">
+                        <div class="piece-thumb piece-2">2</div>
+                        <span class="piece-name">青色 - T形块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(3)">
+                        <div class="piece-thumb piece-3">3</div>
+                        <span class="piece-name">蓝色 - Z形块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(4)">
+                        <div class="piece-thumb piece-4">4</div>
+                        <span class="piece-name">绿色 - L扭块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(5)">
+                        <div class="piece-thumb piece-5">5</div>
+                        <span class="piece-name">黄色 - 三脚块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(6)">
+                        <div class="piece-thumb piece-6">6</div>
+                        <span class="piece-name">紫色 - S形块</span>
+                    </div>
+                    <div class="piece-row" onclick="showPiece(7)">
+                        <div class="piece-thumb piece-7">7</div>
+                        <span class="piece-name">浅绿 - 角落块</span>
+                    </div>
                 </div>
             </div>
             
@@ -559,8 +600,8 @@
             currentPiece = num;
             
             // 更新缩略图状态
-            document.querySelectorAll('.piece-thumb').forEach(el => el.classList.remove('active'));
-            document.querySelector(`.piece-${num}`).classList.add('active');
+            document.querySelectorAll('.piece-row').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.piece-row')[num-1].classList.add('active');
             document.querySelector('.full-cube-thumb').classList.remove('active');
             
             // 设置立方体样式
