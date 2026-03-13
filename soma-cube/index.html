@@ -202,20 +202,22 @@ function project(x,y,z){
 }
 
 function drawCube(x,y,z,col){
-    // 6个面，顶点顺序
+    // 全息效果
+    var holoOpacity = 0.8;
+    var glowIntensity = 0.6;
+    var time = Date.now() * 0.002;
+    
     var faces = [
-        {pts:[[x,y,z],[x+1,y,z],[x+1,y-1,z],[x,y-1,z]],b:1.0},    // 前
-        {pts:[[x,y,z-1],[x,y-1,z-1],[x+1,y-1,z-1],[x+1,y,z-1]],b:0.6}, // 后
-        {pts:[[x+1,y,z],[x+1,y,z-1],[x+1,y-1,z-1],[x+1,y-1,z]],b:0.8}, // 右
-        {pts:[[x,y,z],[x,y-1,z],[x,y-1,z-1],[x,y,z-1]],b:0.7},     // 左
-        {pts:[[x,y,z],[x+1,y,z],[x+1,y,z-1],[x,y,z-1]],b:1.1},     // 上
-        {pts:[[x,y-1,z],[x+1,y-1,z],[x+1,y-1,z-1],[x,y-1,z-1]],b:0.5}  // 下
+        {pts:[[x,y,z],[x+1,y,z],[x+1,y-1,z],[x,y-1,z]],b:1.0},
+        {pts:[[x,y,z-1],[x,y-1,z-1],[x+1,y-1,z-1],[x+1,y,z-1]],b:0.6},
+        {pts:[[x+1,y,z],[x+1,y,z-1],[x+1,y-1,z-1],[x+1,y-1,z]],b:0.8},
+        {pts:[[x,y,z],[x,y-1,z],[x,y-1,z-1],[x,y,z-1]],b:0.7},
+        {pts:[[x,y,z],[x+1,y,z],[x+1,y,z-1],[x,y,z-1]],b:1.1},
+        {pts:[[x,y-1,z],[x+1,y-1,z],[x+1,y-1,z-1],[x,y-1,z-1]],b:0.5}
     ];
-    // 计算每个面的中心Z值
     faces.forEach(function(f){
         f.z = f.pts.reduce(function(s,p){return s+p[0]*Math.sin(ry)+p[1]*Math.cos(ry)+p[2]},0)/4;
     });
-    // 按Z从远到近排序
     faces.sort(function(a,b){return b.z-a.z});
     
     faces.forEach(function(f){
@@ -227,20 +229,48 @@ function drawCube(x,y,z,col){
             ctx.lineTo(p.x,p.y);
         }
         ctx.closePath();
-        ctx.fillStyle = 'rgb('+Math.floor(col.r*f.b)+','+Math.floor(col.g*f.b)+','+Math.floor(col.b*f.b)+')';
+        
+        // 半透明填充
+        var r = Math.floor(col.r * f.b);
+        var g = Math.floor(col.g * f.b);
+        var b = Math.floor(col.b * f.b);
+        ctx.fillStyle = 'rgba('+r+','+g+','+b+','+holoOpacity+')';
         ctx.fill();
-        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        
+        // 发光边缘
+        ctx.strokeStyle = 'rgba('+Math.min(255,r+80)+','+Math.min(255,g+80)+','+Math.min(255,b+80)+','+glowIntensity+')';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        
+        // 扫描线效果
+        ctx.beginPath();
+        var midX = (project(f.pts[0][0],f.pts[0][1],f.pts[0][2]).x + project(f.pts[2][0],f.pts[2][1],f.pts[2][2]).x) / 2;
+        var midY = (project(f.pts[0][0],f.pts[0][1],f.pts[0][2]).y + project(f.pts[2][0],f.pts[2][1],f.pts[2][2]).y) / 2;
+        var scanY = midY + Math.sin(time + x + y + z) * 6;
+        ctx.moveTo(midX - 10, scanY);
+        ctx.lineTo(midX + 10, scanY);
+        ctx.strokeStyle = 'rgba(255,255,255,0.2)';
         ctx.lineWidth = 1;
         ctx.stroke();
     });
 }
 
 function draw(){
-    ctx.fillStyle = '#222';
+    // 全息背景
+    ctx.fillStyle = '#0a0a14';
     ctx.fillRect(0,0,cw,ch);
-    // 按Z排序所有立方体
+    
+    // 背景网格
+    ctx.strokeStyle = 'rgba(0,200,255,0.03)';
+    ctx.lineWidth = 1;
+    for(var i=0; i<cw; i+=30){
+        ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,ch); ctx.stroke();
+    }
+    for(var i=0; i<ch; i+=30){
+        ctx.beginPath(); ctx.moveTo(0,i); ctx.lineTo(cw,i); ctx.stroke();
+    }
+    
     var sorted = cubes.map(function(c){
-        var p = {x:c.x, y:c.y, z:c.z};
         return {c:c, z:c.x*Math.sin(ry)+c.y*Math.cos(ry)+c.z};
     }).sort(function(a,b){return b.z-a.z});
     sorted.forEach(function(s){drawCube(s.c.x,s.c.y,s.c.z,s.c.col)});
